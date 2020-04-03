@@ -8,7 +8,7 @@
 
 以上是官方的一个介绍，说明acme.sh遵从什么规则来生成证书，附上acme.sh的中文官方说明：
 
-[中文文档]([https://github.com/acmesh-official/acme.sh/wiki/%E8%AF%B4%E6%98%8E](https://github.com/acmesh-official/acme.sh/wiki/说明))
+[中文文档](https://github.com/acmesh-official/acme.sh/wiki/说明)
 
 按照说明文档来基本可以完成配置，但是我想以docker的方式来配置，于是想把自己实践的一些步骤记录下来，下面开始；
 
