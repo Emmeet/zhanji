@@ -17,7 +17,7 @@
 
 
 
-<table>
+<table style='width: 100%;'>
     <thead>
     	<th>类别</th>
         <th>文章</th>
