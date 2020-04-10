@@ -13,7 +13,7 @@
 
 下面详细介绍：
 
-1. docker-compose关于acme.sh镜像的配置
+1. #### docker-compose关于acme.sh镜像的配置
 
    ```dockerfile
    version: '3'
@@ -29,7 +29,9 @@
 
    
 
-2. 执行`docker-compose up -d`启动镜像，并执行`docker exec -it acme /bin/sh`命令进入容器内部，acme生成证书的方式分为两种，分别是http和dns，主要介绍dns方式，执行命令：
+2. #### 生成证书
+
+   执行`docker-compose up -d`启动镜像，并执行`docker exec -it acme /bin/sh`命令进入容器内部，acme生成证书的方式分为两种，分别是http和dns，主要介绍dns方式，执行命令：
 
    `acme.sh  --issue  --dns -d <yuodomain.com>`
 
@@ -80,11 +82,13 @@
 
    
 
-3. 生成的证书位置在`/acme.sh/<yuodomain.com>/<yuodomain.com>.key`，为了便于统一管理，将其复制到/shared文件下并映射到宿主机，具体详见第一步compose配置的映射关系；
+3. #### 映射到宿主机
+
+   生成的证书位置在`/acme.sh/<yuodomain.com>/<yuodomain.com>.key`，为了便于统一管理，将其复制到/shared文件下并映射到宿主机，具体详见第一步compose配置的映射关系；
 
    
 
-4. Nginx配置如下
+4. #### Nginx配置：
 
    ```nginx
    server {
