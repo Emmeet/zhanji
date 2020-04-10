@@ -17,10 +17,10 @@
 
 
 
-<table width='500'>
+<table>
     <thead>
     	<th>类别</th>
-        <th>文章</th>
+      <th style='width: 595px;'>文章</th>
     </thead>
     <tbody>
     	<tr>
