@@ -20,7 +20,7 @@
 <table>
     <thead>
     	<th>类别</th>
-      <th style='width: 595px;'>文章</th>
+      <th width='595px'>文章</th>
     </thead>
     <tbody>
     	<tr>
