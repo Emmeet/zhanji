@@ -19,8 +19,8 @@
 
 <table>
     <thead>
-    	<th>类别</th>
-      <th width='595px'>文章</th>
+    	<th width='220px'>类别</th>
+      <th width='695px'>文章</th>
     </thead>
     <tbody>
     	<tr>
