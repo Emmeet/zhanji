@@ -2,8 +2,6 @@
 
 ***
 
-![acme.png](https://raw.githubusercontent.com/Emmeet/zhanji/master/image/acme.png)
-
 > **acme.sh** 实现了 `acme` 协议, 可以从 letsencrypt 生成免费的证书.
 
 以上是官方的一个介绍，说明acme.sh遵从什么规则来生成证书，附上acme.sh的中文官方说明：
