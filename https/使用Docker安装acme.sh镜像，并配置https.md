@@ -2,17 +2,16 @@
 
 ***
 
-> **acme.sh** 实现了 `acme` 协议, 可以从 letsencrypt 生成免费的证书.
+主要步骤：
 
-以上是官方的一个介绍，说明acme.sh遵从什么规则来生成证书，附上acme.sh的中文官方说明：
-
-[中文文档](https://github.com/acmesh-official/acme.sh/wiki/说明)
-
-按照说明文档来基本可以完成配置，但是我想以docker的方式来配置，于是想把自己实践的一些步骤记录下来，下面开始；
+1. 使用docker-compose方式安装acme.sh
+2. 进入acme.sh容器内部执行生成证书操作
+3. 将生成的证书映射到宿主机
+4. Nginx根据生成的证书配置https
 
 ***
 
-> docker将默认使用docker-compose进行
+下面详细介绍：
 
 1. docker-compose关于acme.sh镜像的配置
 
@@ -28,31 +27,25 @@
                    
    ```
 
-   由于证书主要配合nginx进行使用，所以在nginx的volume下建立了映射文件夹，/shared 并不是acme生成证书存放的位置，具体生成的证书在哪一会详细说明；
-
    
 
-2. 执行`docker-compose up -d`启动镜像，并执行`docker exec -it acme /bin/sh`命令进入容器内部，接下来生成证书的操作将在这里执行；
-
-   
-
-3. 进入容器后，acme主要有http和dns两种方式生成证书，这里主要介绍dns方式，执行命令：
+2. 执行`docker-compose up -d`启动镜像，并执行`docker exec -it acme /bin/sh`命令进入容器内部，acme生成证书的方式分为两种，分别是http和dns，主要介绍dns方式，执行命令：
 
    `acme.sh  --issue  --dns -d <yuodomain.com>`
 
-   最新版本的acme执行这条命令后可能会出现如下提示：
+   最新版本的acme执行这条命令后会出现如下提示：
 
    ```shell
    It seems that you are using dns manual mode. Read this link first: https://github.com/acmesh-official/acme.sh/wiki/dns-manual-mode
    ```
 
-   根据提示地址查看文档可知，我们是以手动dns的方式生成，需要在后面加上一串命令，生成的命令变为：
+   根据提示地址查看文档可知，我们是以手动dns的方式生成，需要在后面加上我已知晓当前为手动操作并同意：
 
    ```shell
    acme.sh  --issue  --dns -d <yuodomain.com> --yes-I-know-dns-manual-mode-enough-go-ahead-please
    ```
 
-   用来告诉程序，我知道这是手动方式生成，我同意，命令执行成功后，会出现提示：
+   命令执行成功后，会出现如下提示：
 
    ```shell
    Create account key ok.
@@ -75,21 +68,23 @@
    
    ```
 
-   这时候我们需要到域名控制台，添加一条解析记录，记录类型为TXT，主机记录和值已经给出，另外生成证书存放位置为上方成功提示：`The domain key is here：`后面的文件夹
+   到域名控制台，添加一条解析记录，记录类型为TXT，主机记录为`_acme-challenge`，值为`TXT value`；
 
-   
-
-4. 添加完解析记录后继续执行命令：
+   域名控制台添加完解析记录后继续执行命令：
 
    ```shell
    acme.sh --renew --dns -d <yuodomain.com> --yes-I-know-dns-manual-mode-enough-go-ahead-please
    ```
 
-   出现成功的提示`Cert success.`，则整个生成过程便以完成，可以将证书映射出去进行使用，需要注意得是Nginx 的配置 `ssl_certificate`  和 `ssl_trusted_certificate` 使用 `fullchain.cer` ，而非 `<domain>.cer` ，否则 [SSL Labs](https://www.ssllabs.com/ssltest/) 的测试会报 `Chain issues Incomplete` 错误
+   出现成功的提示`Cert success.`，证书生成完成，可以将证书映射到宿主机进行使用，需要注意得是Nginx 的配置 `ssl_certificate`  和 `ssl_trusted_certificate` 使用 `fullchain.cer` ，而非 `<domain>.cer` ，否则 [SSL Labs](https://www.ssllabs.com/ssltest/) 的测试会报 `Chain issues Incomplete` 错误
 
    
 
-5. 最后附上我的Nginx配置
+3. 生成的证书位置在`/acme.sh/<yuodomain.com>/<yuodomain.com>.key`，为了便于统一管理，将其复制到/shared文件下并映射到宿主机，具体详见第一步compose配置的映射关系；
+
+   
+
+4. Nginx配置如下
 
    ```nginx
    server {
@@ -152,6 +147,3 @@
    ```
 
    
-
-
-
